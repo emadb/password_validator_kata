@@ -1,5 +1,7 @@
-# [Password Validation](https://www.codurance.com/katas/password-validation)
+# Password Validation Kata
+Taken from [Codurance](https://www.codurance.com/katas/password-validation)
 
+_Resolved in [Elixir](https://elixir-lang.org) using recursion (no loops!) an a functional approach. Each validator is a pure function._
 
 ## Iteration 1 - Basic password validation
 
