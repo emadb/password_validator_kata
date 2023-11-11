@@ -43,8 +43,14 @@ defmodule PasswordValidatorKata do
       pwd
       |> apply_rules(rules, [])
       |> build_result({:ok, []})
+      |> relax_constraint()
+
     end
   end
+
+  defp relax_constraint({:ok, []}), do: {:ok, []}
+  defp relax_constraint({:error, [err]}), do: {:ok, [err]}
+  defp relax_constraint({:error, err}), do: {:error, err}
 
   defp apply_rules(_, [], errs), do: errs
 
