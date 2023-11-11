@@ -42,26 +42,20 @@ defmodule PasswordValidatorKata do
     fn pwd ->
       pwd
       |> apply_rules(rules, [])
-      |> build_result({:ok, []})
+      |> build_res({:ok, []})
       |> relax_constraint()
-
     end
   end
 
-  defp relax_constraint({:ok, []}), do: {:ok, []}
   defp relax_constraint({:error, [err]}), do: {:ok, [err]}
-  defp relax_constraint({:error, err}), do: {:error, err}
+  defp relax_constraint(res), do: res
 
   defp apply_rules(_, [], errs), do: errs
+  defp apply_rules(pwd, [rule | t], errs), do: apply_rules(pwd, t, [rule.(pwd) | errs])
 
-  defp apply_rules(pwd, [rule | t], errs) do
-    res = rule.(pwd)
-    apply_rules(pwd, t, [res | errs])
-  end
+  def build_res([], res), do: res
+  def build_res([{:ok, ""} | tail], acc), do: build_res(tail, acc)
 
-  def build_result([], res), do: res
-  def build_result([{:ok, ""} | tail], acc), do: build_result(tail, acc)
-
-  def build_result([{:error, msg} | tail], {_, err_list}),
-    do: build_result(tail, {:error, [msg | err_list]})
+  def build_res([{:error, msg} | tail], {_, err_list}),
+    do: build_res(tail, {:error, [msg | err_list]})
 end

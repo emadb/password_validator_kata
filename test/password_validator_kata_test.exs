@@ -110,6 +110,6 @@ defmodule PasswordValidatorKataTest do
              {:ok, ["Password must contains a capital letter"]}
 
     assert validator.("S_hort") ==
-              {:ok, ["Password must be at least 8 chars"]}
+             {:ok, ["Password must be at least 8 chars"]}
   end
 end
