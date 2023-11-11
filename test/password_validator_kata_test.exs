@@ -30,32 +30,32 @@ defmodule PasswordValidatorKataTest do
 
   test "Rule: Have more than 8 characters" do
     rule = PasswordValidatorKata.more_than_8_chars()
-    assert rule.("pwd_with_more_than_eight_chars")
-    refute rule.("pwd")
+    assert rule.("pwd_with_more_than_eight_chars") == {:ok, ""}
+    assert rule.("pwd") == {:error, "Password must be at least 8 chars"}
   end
 
   test "Rule: Contains a capital letter" do
     rule = PasswordValidatorKata.contains_a_capital_letter()
-    assert rule.("pWd")
-    refute rule.("pwd")
+    assert rule.("pWd") == {:ok, ""}
+    assert rule.("pwd") == {:error, "Password must contains a capital letter"}
   end
 
   test "Rule: Contains a lowercase letter" do
     rule = PasswordValidatorKata.contains_a_lowercase_letter()
-    assert rule.("pW")
-    refute rule.("PW")
+    assert rule.("pW") == {:ok, ""}
+    assert rule.("PW") == {:error, "Password must contains a lowercase letter"}
   end
 
   test "Rule: Contains a number" do
     rule = PasswordValidatorKata.contains_a_number()
-    assert rule.("8")
-    refute rule.("P")
+    assert rule.("8") == {:ok, ""}
+    assert rule.("P") == {:error, "Password must contains a number"}
   end
 
   test "Rule: Contains an underscore" do
     rule = PasswordValidatorKata.contains_an_underscore()
-    assert rule.("_")
-    refute rule.("P")
+    assert rule.("_") == {:ok, ""}
+    assert rule.("P") == {:error, "Password must contains an underscore"}
   end
 
   test "build a password validator with no rules" do
@@ -66,8 +66,8 @@ defmodule PasswordValidatorKataTest do
   test "build a password validator with one rule" do
     rule = PasswordValidatorKata.more_than_8_chars()
     validator = PasswordValidatorKata.build([rule])
-    assert validator.("pwd_with_more_than_eight_chars")
-    refute validator.("short")
+    assert validator.("pwd_with_more_than_eight_chars") == {:ok, []}
+    assert validator.("short") == {:error, ["Password must be at least 8 chars"]}
   end
 
   test "build a password validator with two rules" do
@@ -75,9 +75,8 @@ defmodule PasswordValidatorKataTest do
     rule2 = PasswordValidatorKata.contains_a_capital_letter()
     validator = PasswordValidatorKata.build([rule1, rule2])
 
-    assert validator.("Pwd_with_more_than_eight_chars")
-    refute validator.("short")
-    refute validator.("pwd_with_more_than_eight_chars")
+    assert validator.("Pwd_with_more_than_eight_chars") == {:ok, []}
+    assert validator.("short") == {:error, ["Password must be at least 8 chars", "Password must contains a capital letter"]}
   end
 
   test "build a password validator with three rules" do
@@ -86,9 +85,8 @@ defmodule PasswordValidatorKataTest do
     rule3 = PasswordValidatorKata.contains_an_underscore()
     validator = PasswordValidatorKata.build([rule1, rule2, rule3])
 
-    assert validator.("Pwd_with_more_than_eight_chars")
-    refute validator.("short_")
-    refute validator.("pwd_with_more_than_eight_chars")
-    refute validator.("pwd-with-more-than-eight-chars")
+    assert validator.("Pwd_with_more_than_eight_chars") == {:ok, []}
+    assert validator.("short_") ==  {:error, ["Password must be at least 8 chars", "Password must contains a capital letter"]}
+    assert validator.("pwd_with_more_than_eight_chars") == {:error, ["Password must contains a capital letter"]}
   end
 end
